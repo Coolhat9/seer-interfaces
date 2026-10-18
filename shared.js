@@ -3,6 +3,48 @@
   const LOGO = `<svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M19.5 2.5 5 17.2c-.6.6-.2 1.6.7 1.6h7.1l-2.6 9.1c-.2.8.8 1.3 1.4.7L26.9 13c.6-.6.2-1.6-.7-1.6h-7.4l2.4-7.6c.3-.9-.7-1.6-1.4-.9Z" fill="currentColor"/><path d="M9 17.5l14.2-6" stroke="var(--bg)" stroke-width="2.6" stroke-linecap="round"/></svg>`;
   window.SEER_LOGO = LOGO;
 
+  // ---------- splash intro: Seer logo first, then the page ----------
+  (function () {
+    try {
+      const internal = document.referrer && new URL(document.referrer).origin === location.origin;
+      if (internal || /[?&]nosplash/.test(location.search)) return;   // skip when moving between our own pages
+    } catch (e) {}
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const st = document.createElement('style');
+    st.textContent = `
+      #splash{position:fixed;inset:0;z-index:9999;background:var(--bg,#101013);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;transition:opacity .55s ease,visibility .55s;cursor:pointer;overflow:hidden}
+      #splash.out{opacity:0;visibility:hidden}
+      #splash::before{content:"";position:absolute;width:560px;height:560px;max-width:140vw;border-radius:50%;background:radial-gradient(circle,var(--glow,rgba(116,53,248,.28)),transparent 65%);animation:spGlow 2.4s ease-in-out infinite}
+      .sp-mark{position:relative;display:flex;align-items:center;gap:8px;font-family:'Outfit',system-ui,sans-serif;font-weight:700;font-size:clamp(52px,14vw,76px);letter-spacing:-.04em;color:var(--text,#ededf2);line-height:1}
+      .sp-mark svg{width:1em;height:1em;color:var(--text,#ededf2);animation:spPop .9s cubic-bezier(.2,1.4,.3,1) both}
+      .sp-mark span{animation:spUp .7s .25s ease-out both}
+      .sp-tag{position:relative;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--btn2-text,#9c6ff2);animation:spUp .7s .6s ease-out both}
+      .sp-bar{position:relative;width:132px;height:3px;border-radius:9px;background:rgba(127,127,140,.22);overflow:hidden}
+      .sp-bar i{display:block;height:100%;width:0;background:var(--primary,#7435f8);border-radius:9px;animation:spFill 1.5s .1s ease-out forwards}
+      @keyframes spPop{0%{opacity:0;transform:scale(.4) rotate(-14deg)}100%{opacity:1;transform:none}}
+      @keyframes spUp{0%{opacity:0;transform:translateY(12px)}100%{opacity:1;transform:none}}
+      @keyframes spFill{to{width:100%}}
+      @keyframes spGlow{50%{transform:scale(1.12);opacity:.75}}
+      @media (prefers-reduced-motion:reduce){#splash *,#splash::before{animation:none!important}.sp-bar i{width:100%}}`;
+    document.documentElement.appendChild(st);
+    const sp = document.createElement('div');
+    sp.id = 'splash'; sp.setAttribute('role', 'status'); sp.setAttribute('aria-label', 'Loading Seer');
+    sp.innerHTML = `<div class="sp-mark">${LOGO}<span>seer</span></div><div class="sp-tag">See the signal</div><div class="sp-bar"><i></i></div>`;
+    document.documentElement.appendChild(sp);
+    document.documentElement.style.overflow = 'hidden';
+    let gone = false;
+    const end = () => {
+      if (gone) return; gone = true;
+      sp.classList.add('out'); document.documentElement.style.overflow = '';
+      setTimeout(() => { sp.remove(); st.remove(); }, 700);
+    };
+    const minShow = reduced ? 500 : 1800, t0 = Date.now();
+    const go = () => setTimeout(end, Math.max(0, minShow - (Date.now() - t0)));
+    if (document.readyState === 'complete') go(); else addEventListener('load', go);
+    setTimeout(end, 4000);          // safety: never block the page
+    sp.addEventListener('click', end);
+  })();
+
   // ---------- wallet connect ----------
   const WALLETS = [['MetaMask', 'M', '#f6851b', 'Browser extension'], ['Coinbase Wallet', 'C', '#0052ff', 'Mobile & extension'], ['WalletConnect', 'W', '#3b99fc', 'Scan with any wallet'], ['Rabby', 'R', '#7084ff', 'Browser extension']];
   const Wallet = {
