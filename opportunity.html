@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Opportunity Markets — Collective leans</title>
+<link rel="stylesheet" href="styles.css">
+<script src="shared.js"></script>
+</head>
+<body>
+<main>
+  <section class="hero glow" style="padding-bottom:24px">
+    <div class="wrap">
+      <div class="eyebrow">Opportunity Markets · Selection signal</div>
+      <h1 style="margin-top:14px">See where the<br><span class="accent">collective leans.</span></h1>
+      <p class="lead">Turn a field of applications, grants or proposals into a readable forecast of which submissions are most likely to be selected. Reviewers keep the final say.</p>
+      <div class="grid g4 keep2" style="margin-top:28px">
+        <div class="card stat"><div class="k">Open opportunities</div><div class="v">18</div><div class="d">Across 6 programs</div></div>
+        <div class="card stat"><div class="k">Submissions tracked</div><div class="v">246</div><div class="d">+31 this week</div></div>
+        <div class="card stat"><div class="k">Avg. top-pick signal</div><div class="v">52%</div><div class="d">Leading submission</div></div>
+        <div class="card stat"><div class="k">Next decision</div><div class="v">Oct 28</div><div class="d">Reviewer vote</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding-top:8px">
+    <div class="wrap">
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:14px">
+        <label class="search"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input id="q" type="search" placeholder="Search opportunities or teams…" aria-label="Search"></label>
+        <div class="tabs" id="tabs"></div>
+      </div>
+      <div class="card" style="padding:6px">
+        <div class="tbl-wrap"><table class="table"><thead><tr><th>Opportunity</th><th>Category</th><th>Selection chance</th><th>7d</th><th>Trade</th></tr></thead><tbody id="rows"></tbody></table></div>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding-top:0">
+    <div class="wrap split">
+      <div class="card">
+        <div class="section-head"><div><div class="eyebrow">Featured selection field</div><h3 style="margin-top:6px">Open-source grants · Round 04</h3></div><span class="badge">12 candidates</span></div>
+        <div class="list" id="field"></div>
+      </div>
+      <div class="card">
+        <div class="eyebrow">What might this field support?</div>
+        <h3 style="margin:8px 0 10px">Where might support land?</h3>
+        <p class="t2" style="font-size:14px">Opportunity Markets give reviewers one more input: where the crowd expects selection to go. Prices are not a decision, and a low price does not mean a submission lacks merit.</p>
+        <div class="list" style="margin-top:14px">
+          <div class="item"><div class="ic">✓</div><div class="tx">Use as a triage signal<small>Spot submissions that merit a closer read.</small></div></div>
+          <div class="item"><div class="ic">!</div><div class="tx">Check the outliers<small>Large gaps between price and rating are interesting.</small></div></div>
+          <div class="item"><div class="ic">⚖</div><div class="tx">Reviewers decide<small>The team’s vote remains the source of truth.</small></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+<script>
+mountShell('opportunity.html');
+const D=[
+ ['Open-source developer grants','Grants',76,4.2,'Round 04'],['Community research fellowship','Fellowship',64,1.7,'12 candidates'],
+ ['Builder residency cohort','Residency',52,-1.3,'30 teams'],['Public goods matching pool','Grants',47,3.9,'Quadratic'],
+ ['Hackathon finalist selection','Hackathon',58,2.2,'Top 8'],['Ecosystem accelerator batch','Accelerator',39,-0.8,'Batch 7'],
+ ['Infrastructure audit subsidy','Grants',44,0.9,'Security'],['Creator commission pool','Commission',33,5.1,'Visual art']
+];
+let cat='All'; const cats=['All',...new Set(D.map(d=>d[1]))];
+$('#tabs').innerHTML=cats.map((c,i)=>`<button class="chip ${i?'':'on'}" data-c="${c}">${c}</button>`).join('');
+$('#tabs').onclick=e=>{const b=e.target.closest('.chip');if(!b)return;$$('.chip').forEach(x=>x.classList.remove('on'));b.classList.add('on');cat=b.dataset.c;r()};
+$('#q').oninput=()=>r();
+function r(){const s=$('#q').value.toLowerCase();
+ $('#rows').innerHTML=D.filter(d=>(cat==='All'||d[1]===cat)&&(!s||d[0].toLowerCase().includes(s))).map(d=>`<tr><td><b>${d[0]}</b><div class="muted" style="font-size:12px">${d[4]}</div></td><td><span class="badge">${d[1]}</span></td><td><div class="cell-bar"><b style="width:40px">${d[2]}%</b>${bar(d[2])}</div></td><td class="${d[3]>=0?'up':'down'}">${d[3]>=0?'▲':'▼'} ${Math.abs(d[3])}%</td><td><span class="yn"><button class="yes" onclick="openTicket('${d[0]} — selected?','Yes',${d[2]},'$240K Vol.')">Yes</button><button class="no" onclick="openTicket('${d[0]} — selected?','No',${100-d[2]},'$240K Vol.')">No</button></span></td></tr>`).join('')||'<tr><td colspan="5" class="muted" style="text-align:center;padding:40px">No results</td></tr>';}
+r();
+const F=[['Open-source developer tools',76],['Community data tooling',64],['Climate research stack',52],['Local language models',47],['Other submissions',31]];
+$('#field').innerHTML=F.map((f,i)=>`<div class="item"><div class="ic">${i+1}</div><div class="tx">${f[0]}${bar(f[1])}</div><b>${f[1]}%</b></div>`).join('');
+</script>
+</body>
+</html>

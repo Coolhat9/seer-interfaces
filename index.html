@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Seer — See the signal</title>
+<meta name="description" content="Seer is the forecasting protocol beneath a family of connected market interfaces.">
+<link rel="stylesheet" href="styles.css">
+<script src="shared.js"></script>
+</head>
+<body>
+<main>
+  <section class="hero glow">
+    <div class="wrap grid" style="grid-template-columns:1.2fr 1fr;align-items:center;gap:40px" id="heroGrid">
+      <div>
+        <div class="eyebrow">Seer · One forecasting layer</div>
+        <h1 style="margin-top:18px">See the signal.<br><span class="accent">Shape what<br>comes next.</span></h1>
+        <p class="lead">A new lens on collective intelligence. Explore forecasts, compare possible futures, and bring better signals to the decisions that matter.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary btn-lg" href="app.html">Explore markets →</a>
+          <a class="btn btn-ghost btn-lg" href="#interfaces">View six interfaces</a>
+        </div>
+        <p class="muted" style="margin-top:18px;font-size:13px">A protocol for forecasting. Six interfaces for how people use it.</p>
+      </div>
+      <div class="orb" aria-hidden="true">
+        <div class="ring r3"></div><div class="ring r2"></div><div class="ring r1"></div><div class="core"></div>
+        <span class="lab" style="top:14px;left:16px">COLLECTIVE NETWORK</span>
+        <span class="lab" style="top:14px;right:16px">LIVE CONSENSUS</span>
+        <span class="lab" style="bottom:14px;left:16px">06 INTERFACES</span>
+        <span class="lab" style="bottom:14px;right:16px">ONE PROTOCOL</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="interfaces">
+    <div class="wrap">
+      <div class="section-head"><div><div class="eyebrow">One protocol · Six lenses</div><h2 style="margin-top:8px">Choose your interface.</h2></div>
+        <span class="t2" style="font-size:14px">Every interface reads and writes to the same markets.</span></div>
+      <div class="grid g3" id="tiles"></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap split">
+      <div class="card">
+        <div class="eyebrow">How they fit together</div>
+        <h2 style="margin:8px 0 18px">The protocol beneath the apps.</h2>
+        <div class="stack-diagram">
+          <div class="layer"><div class="muted" style="font-size:12px;margin-bottom:10px" class="mono">INTERFACES</div>
+            <div class="layer-apps"><a href="app.html">Seer App</a><a href="deep.html">Deep</a><a href="futarchy.html">Futarchy</a><a href="opportunity.html">Opportunity</a><a href="risk.html">Risk Pricing</a></div></div>
+          <div class="center t2" style="text-align:center;font-size:18px">↕</div>
+          <div class="layer base"><h3>Seer protocol</h3><p class="t2" style="font-size:14px;margin-top:4px">Market creation · pricing · resolution · liquidity. One shared source of truth for every question.</p></div>
+          <div class="center t2" style="text-align:center;font-size:18px">↕</div>
+          <div class="layer"><h3>Traders, agents &amp; decision-makers</h3><p class="t2" style="font-size:14px;margin-top:4px">People and AI agents trade. Teams and DAOs read the signal — and keep the decision.</p></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="eyebrow">Designed for clarity</div>
+        <div class="list" style="margin-top:16px">
+          <div class="item"><div class="ic">01</div><div class="tx">Signal over noise<small>Prices summarise what many people believe.</small></div></div>
+          <div class="item"><div class="ic">02</div><div class="tx">Evidence, not verdicts<small>Markets inform choices. People make them.</small></div></div>
+          <div class="item"><div class="ic">03</div><div class="tx">Stay transparent<small>Every price, trade and resolution is visible.</small></div></div>
+          <div class="item"><div class="ic">04</div><div class="tx">Humans and agents<small>Open to both, labelled clearly.</small></div></div>
+        </div>
+        <a class="btn btn-secondary" style="margin-top:16px" href="rationale.html">Read design rationale</a>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="card" style="display:flex;gap:24px;align-items:center;justify-content:space-between;flex-wrap:wrap;background:linear-gradient(120deg,color-mix(in srgb,var(--primary) 22%,var(--card)),var(--card))">
+        <div><h2>Start with the signal.</h2><p class="t2" style="margin-top:6px">Open the explorer and find what the crowd is pricing right now.</p></div>
+        <a class="btn btn-primary btn-lg" href="app.html">Open Seer App →</a>
+      </div>
+    </div>
+  </section>
+</main>
+<script>
+mountShell('index.html');
+const tiles = [
+  ['A','Seer App','The general explorer. Find and trade across every market type — Seer’s Etherscan.','Binary · Multi · Scalar','app.html'],
+  ['D','Deep','Questions with many possible outcomes, including markets built for AI agents to trade.','Many outcomes · Agents','deep.html'],
+  ['F','Futarchy','Conditional markets forecast a metric if a proposal passes versus if it doesn’t.','Conditional · DAO','futarchy.html'],
+  ['O','Opportunity Markets','Forecast which submissions get selected. Reviewers keep the final say.','Selection · Grants','opportunity.html'],
+  ['R','Risk Pricing','Compare market-implied risk across DeFi protocols, side by side.','Comparative · DeFi','risk.html'],
+  ['P','The protocol','Open market primitives every interface is built on. Create, price, resolve.','Permissionless','rationale.html']
+];
+$('#tiles').innerHTML = tiles.map(t => `<a class="tile" href="${t[4]}"><div class="ic">${t[0]}</div><h3>${t[1]}</h3><p>${t[2]}</p><span class="badge">${t[3]}</span><span class="go">Open →</span></a>`).join('');
+if (innerWidth < 900) $('#heroGrid').style.gridTemplateColumns = '1fr';
+</script>
+</body>
+</html>

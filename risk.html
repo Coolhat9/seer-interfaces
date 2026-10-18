@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Risk Pricing — Compare the trade-offs</title>
+<link rel="stylesheet" href="styles.css">
+<script src="shared.js"></script>
+</head>
+<body>
+<main>
+  <section class="hero glow" style="padding-bottom:24px">
+    <div class="wrap">
+      <div class="eyebrow">Risk Pricing · Comparative markets</div>
+      <h1 style="margin-top:14px">Price the risk.<br><span class="accent">Compare the trade-offs.</span></h1>
+      <p class="lead">A comparative view of market-implied risk for DeFi protocols, so you can weigh exposure instead of reading one yes-or-no price in isolation.</p>
+      <div class="grid g4 keep2" style="margin-top:28px">
+        <div class="card stat"><div class="k">Protocols covered</div><div class="v">08</div><div class="d">Lending, DEX, vaults</div></div>
+        <div class="card stat"><div class="k">Average implied risk</div><div class="v">4.6%</div><div class="d">30-day horizon</div></div>
+        <div class="card stat"><div class="k">Lowest risk</div><div class="v" id="lo">—</div><div class="d">Market-implied</div></div>
+        <div class="card stat"><div class="k">Highest risk</div><div class="v" id="hi">—</div><div class="d">Market-implied</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding-top:8px">
+    <div class="wrap split">
+      <div class="card">
+        <div class="section-head"><div><div class="eyebrow">30-day market-implied risk</div><h3 style="margin-top:6px">Risk is not one number.</h3></div>
+          <div class="toggle-row" id="hz"></div></div>
+        <div class="list" id="bars"></div>
+        <div class="note" style="margin-top:14px">Market estimates are one input. They do not replace audits, risk models, or your own judgement.</div>
+      </div>
+      <div class="card">
+        <div class="eyebrow">Personal risk lens</div>
+        <h3 style="margin:8px 0 12px">Risk tolerance</h3>
+        <input type="range" id="tol" min="2" max="10" step="0.5" value="5" style="width:100%;accent-color:var(--primary)" aria-label="Risk tolerance">
+        <div style="display:flex;justify-content:space-between;font-size:12px" class="muted"><span>Conservative</span><b id="tv" style="color:var(--text)">5.0%</b><span>Aggressive</span></div>
+        <div class="list" id="fit" style="margin-top:16px"></div>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding-top:0">
+    <div class="wrap">
+      <div class="card">
+        <div class="section-head"><div><div class="eyebrow">Compare protocols</div><h3 style="margin-top:6px">Implied risk over time</h3></div><div class="toggle-row" id="sel"></div></div>
+        <div id="chart"></div>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding-top:0">
+    <div class="wrap">
+      <div class="card" style="padding:6px">
+        <div style="padding:14px 14px 0"><h3>Protocol comparison table</h3></div>
+        <div class="tbl-wrap"><table class="table"><thead><tr><th>Protocol</th><th>Type</th><th>Risk estimate</th><th>Relative level</th><th>Signal</th><th></th></tr></thead><tbody id="tb"></tbody></table></div>
+      </div>
+    </div>
+  </section>
+</main>
+<script>
+mountShell('risk.html');
+const P=[
+ {n:'Aave',t:'Lending',r:2.6,c:'#3ddc84',h:{7:1.4,30:2.6,90:5.2}},{n:'Compound',t:'Lending',r:4.6,c:'#f5b041',h:{7:2.1,30:4.6,90:8.8}},
+ {n:'Morpho',t:'Lending',r:5.1,c:'#f5b041',h:{7:2.4,30:5.1,90:9.7}},{n:'Maker / Sky',t:'Collateral',r:2.9,c:'#3ddc84',h:{7:1.5,30:2.9,90:5.9}},
+ {n:'Curve',t:'DEX / pools',r:7.4,c:'#ff5d6c',h:{7:3.6,30:7.4,90:13.2}},{n:'Uniswap',t:'DEX',r:2.2,c:'#3ddc84',h:{7:1.1,30:2.2,90:4.4}},
+ {n:'Lido',t:'Staking',r:3.4,c:'#3ddc84',h:{7:1.7,30:3.4,90:6.8}},{n:'Pendle',t:'Yield',r:6.3,c:'#ff5d6c',h:{7:3.0,30:6.3,90:11.5}}
+];
+const lvl=r=>r<3.5?['Lower','green','g']:r<5.5?['Moderate','amber','a']:['Elevated','red','r'];
+let hz=30, on=new Set(['Aave','Compound','Curve']), tol=5;
+const sorted=()=>[...P].sort((a,b)=>a.h[hz]-b.h[hz]);
+function draw(){
+  const s=sorted(); $('#lo').textContent=s[0].n; $('#hi').textContent=s.at(-1).n;
+  $('#bars').innerHTML=s.map(p=>{const [l,bc,bb]=lvl(p.h[hz]*30/hz>0?p.h[30]:0);return `<div class="item"><div class="ic">${p.n[0]}</div><div class="tx"><div style="display:flex;justify-content:space-between"><span>${p.n} <span class="muted" style="font-size:12px">${p.t}</span></span><b>${p.h[hz]}%</b></div>${bar(Math.min(100,p.h[hz]*(hz===30?11:hz===7?20:6)),bb)}</div></div>`}).join('');
+  $('#fit').innerHTML=s.map(p=>{const ok=p.h[30]<=tol;return `<div class="item" style="padding:8px 12px"><div class="tx">${p.n}</div><span class="badge ${ok?'green':'red'}">${ok?'Within range':'Above range'}</span></div>`}).join('');
+  $('#tb').innerHTML=s.map(p=>{const [l,bc]=lvl(p.h[30]);return `<tr><td><b>${p.n}</b></td><td class="t2">${p.t}</td><td class="mono">${p.h[30]}%</td><td><span class="badge ${bc}"><i class="dot"></i>${l}</span></td><td><div class="cell-bar" style="min-width:110px">${bar(Math.min(100,p.h[30]*11),lvl(p.h[30])[2])}</div></td><td><button class="yes" onclick="openTicket('${p.n}: exploit or depeg in 30 days?','Yes',${Math.round(p.h[30])},'$310K Vol.')">Trade</button></td></tr>`}).join('');
+  const ser=P.filter(p=>on.has(p.n)).map((p,i)=>({data:walk(p.n.length*13,24,p.h[30]*.6,p.h[30]*.25,.3,20).map((v,j,a)=>+(v+(p.h[30]-a.at(-1))*(j/23)).toFixed(2)),color:['#9c6ff2','#3ddc84','#f5b041','#ff5d6c','#5ab0ff'][i%5]}));
+  lineChart($('#chart'),ser,{min:0,max:12,unit:'%',labels:['Sep 18','','','','','','','','','','','','','','','','','','','','','','','Oct 18'],label:'Implied risk over time'});
+  $('#sel').innerHTML=P.map(p=>`<button class="check ${on.has(p.n)?'on':''}" data-n="${p.n}">${p.n}</button>`).join('');
+}
+$('#hz').innerHTML=[7,30,90].map(d=>`<button class="check ${d===hz?'on':''}" data-d="${d}">${d}d</button>`).join('');
+$('#hz').onclick=e=>{const b=e.target.closest('.check');if(!b)return;hz=+b.dataset.d;$$('#hz .check').forEach(x=>x.classList.toggle('on',x===b));draw()};
+$('#sel').onclick=e=>{const b=e.target.closest('.check');if(!b)return;const n=b.dataset.n;on.has(n)?(on.size>1&&on.delete(n)):on.size<5&&on.add(n);draw()};
+$('#tol').oninput=e=>{tol=+e.target.value;$('#tv').textContent=tol.toFixed(1)+'%';draw()};
+draw();
+</script>
+</body>
+</html>

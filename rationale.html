@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Design rationale — Seer</title>
+<link rel="stylesheet" href="styles.css">
+<script src="shared.js"></script>
+</head>
+<body>
+<main>
+  <section class="hero glow">
+    <div class="wrap prose">
+      <div class="eyebrow">Design rationale</div>
+      <h1 style="font-size:clamp(34px,5vw,56px);margin-top:12px">One system, <span class="accent">six lenses.</span></h1>
+      <p>Each interface starts from the same Electric Foundation kit, then adapts layout and density to its job: exploring, forecasting a field, informing a decision, triaging submissions, or comparing risk.</p>
+
+      <h2>What stays from EF</h2>
+      <p>Logo and wordmark, the electric violet (#7435F8), the dark and light palettes, nested-surface cards, Yes/No pill buttons, the Up/Down and three-way buttons, the Amount + Confirm ticket, and the market-card footer (volume · time · category).</p>
+      <div class="swatches" style="margin:16px 0" id="sw"></div>
+
+      <h2>Deliberate departures</h2>
+      <div class="list" style="margin:12px 0">
+        <div class="item"><div class="ic">1</div><div class="tx"><b>Semantic status colours</b><small>Added green / amber / red for gains, risk levels and agent P&amp;L. The kit has none; risk and conditional forecasts need a fast read.</small></div></div>
+        <div class="item"><div class="ic">2</div><div class="tx"><b>Yes/No prices sum to 100¢</b><small>The kit mock shows 69¢ / 37¢. The ticket uses complementary pricing (69¢ / 31¢) so numbers stay honest.</small></div></div>
+        <div class="item"><div class="ic">3</div><div class="tx"><b>Mono labels for data</b><small>JetBrains Mono for eyebrows, axes and metrics, to separate “data” from “narrative” in dense screens.</small></div></div>
+        <div class="item"><div class="ic">4</div><div class="tx"><b>Soft violet glow in heroes</b><small>One ambient gradient per page ties the six sites together and signals the protocol layer.</small></div></div>
+        <div class="item"><div class="ic">5</div><div class="tx"><b>Table views for Opportunity &amp; Risk</b><small>Comparison tasks need aligned columns, not cards.</small></div></div>
+        <div class="item"><div class="ic">6</div><div class="tx"><b>Persistent “informs, doesn’t decide” notes</b><small>Futarchy, Opportunity and Risk all repeat that markets are one input, never the verdict.</small></div></div>
+      </div>
+
+      <h2>Interface intent</h2>
+      <p><b style="color:var(--text)">Home</b> shows Seer as the protocol beneath its apps. <b style="color:var(--text)">Seer App</b> is the Etherscan-style explorer. <b style="color:var(--text)">Deep</b> maps many-outcome questions and agent activity. <b style="color:var(--text)">Futarchy</b> compares pass vs fail forecasts. <b style="color:var(--text)">Opportunity</b> shows selection odds while reviewers keep the call. <b style="color:var(--text)">Risk Pricing</b> compares protocols side by side.</p>
+
+      <h2>Accessibility</h2>
+      <p>Both themes meet contrast for body text, interactive elements are keyboard-reachable, motion respects prefers-reduced-motion, and every layout collapses cleanly to phone width.</p>
+    </div>
+  </section>
+</main>
+<script>
+mountShell('rationale.html');
+const s=[['Page','--bg'],['Card','--card'],['Nested','--nested'],['Text','--text'],['Text 2','--text2'],['Muted','--muted'],['Primary','--primary'],['Button 2','--btn2'],['Btn 2 text','--btn2-text']];
+function sw(){ $('#sw').innerHTML=s.map(([n,v])=>`<div class="sw" style="background:var(${v});color:${['--text','--primary','--text2','--muted'].includes(v)?'#fff':'var(--text)'}">${n}<br>${getComputedStyle(document.documentElement).getPropertyValue(v).trim()}</div>`).join(''); }
+sw(); addEventListener('themechange',sw);
+</script>
+</body>
+</html>

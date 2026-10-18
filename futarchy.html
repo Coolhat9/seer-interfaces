@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Futarchy — Test the decision</title>
+<link rel="stylesheet" href="styles.css">
+<script src="shared.js"></script>
+</head>
+<body>
+<main>
+  <section class="hero glow" style="padding-bottom:24px">
+    <div class="wrap">
+      <div class="eyebrow">Futarchy · Conditional markets</div>
+      <h1 style="margin-top:14px">Test the decision<br><span class="accent">before the decision.</span></h1>
+      <p class="lead">Compare what the world could look like if a proposal passes versus if it fails. The DAO gets information to weigh — the decision stays with the DAO.</p>
+      <div class="hero-actions"><span class="badge amber"><i class="dot"></i> Informs · does not decide</span></div>
+    </div>
+  </section>
+
+  <section style="padding-top:8px">
+    <div class="wrap">
+      <div class="card" style="padding:24px">
+        <div class="section-head" style="margin-bottom:10px">
+          <div><div class="eyebrow">Conditional forecast</div><h2 style="font-size:26px;margin-top:8px">Will proposal SEIP-42 improve protocol revenue over 90 days?</h2></div>
+          <div class="toggle-row" id="metricTabs"></div>
+        </div>
+        <p class="t2" style="max-width:720px;font-size:14px">The key question is not simply whether a proposal passes. It is how the chosen success metric is expected to move <b style="color:var(--text)">if it passes</b> compared with <b style="color:var(--text)">if it fails</b>.</p>
+        <div class="grid g3" style="margin-top:20px">
+          <div class="nested" style="padding:16px"><div class="muted mono" style="font-size:11px">IF PASSED · FORECAST</div><div class="stat"><div class="v up" id="vp">+18%</div></div><div class="bar" style="margin-top:8px"><i id="bp" style="width:72%"></i></div><div class="d muted" style="font-size:12px;margin-top:6px">Expected metric change</div></div>
+          <div class="nested" style="padding:16px"><div class="muted mono" style="font-size:11px">IF FAILED · FORECAST</div><div class="stat"><div class="v" id="vf">+4%</div></div><div class="bar" style="margin-top:8px"><i id="bf" style="width:16%;background:var(--muted)"></i></div><div class="d muted" style="font-size:12px;margin-top:6px">Expected metric change</div></div>
+          <div class="nested" style="padding:16px;border:1px solid color-mix(in srgb,var(--primary) 40%,transparent)"><div class="muted mono" style="font-size:11px">PROPOSAL EFFECT</div><div class="stat"><div class="v accent" id="vd">+14 pp</div></div><div class="d muted" style="font-size:12px;margin-top:14px">Pass minus fail · negative would signal harm</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding-top:0">
+    <div class="wrap split">
+      <div class="card">
+        <div class="section-head"><h3>Forecast over time</h3>
+          <div class="legend"><span><i style="background:var(--green)"></i>If passed</span><span><i style="background:var(--muted)"></i>If failed</span></div></div>
+        <div id="chart"></div>
+        <div class="note" style="margin-top:12px">Conditional markets revert if their condition is not met: only the branch that actually happens is resolved.</div>
+      </div>
+      <div class="grid" style="align-content:start">
+        <div class="card"><h3 style="margin-bottom:12px">Outcome comparison</h3>
+          <div class="list" id="oc"></div></div>
+        <div class="card"><div class="eyebrow">How to use this</div>
+          <div class="list" style="margin-top:12px">
+            <div class="item"><div class="ic">1</div><div class="tx">Define the proposal<small>Pick a success metric up front.</small></div></div>
+            <div class="item"><div class="ic">2</div><div class="tx">Compare conditions<small>Pass vs fail forecasts, side by side.</small></div></div>
+            <div class="item"><div class="ic">3</div><div class="tx">Weigh the evidence<small>Governance decides, with context.</small></div></div>
+          </div></div>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding-top:0">
+    <div class="wrap">
+      <div class="card" style="display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:center">
+        <div><div class="eyebrow">Governance</div><h3 style="margin:6px 0 2px">DAO vote closes Oct 28, 18:00 UTC</h3><p class="t2" style="font-size:14px">Market signal is one input. Final decision rests with token holders.</p></div>
+        <div style="display:flex;gap:8px"><button class="btn btn-secondary" onclick="toast('Opens proposal thread (placeholder)')">Read proposal</button>
+        <button class="btn btn-primary" onclick="openTicket('Revenue grows if SEIP-42 passes?','Yes',68,'$412K Vol.')">Trade the forecast</button></div>
+      </div>
+    </div>
+  </section>
+</main>
+<script>
+mountShell('futarchy.html');
+const M={
+ rev:{n:'Revenue growth',u:'%',p:18,f:4,pd:'+14 pp',oc:[['Revenue growth if passed',18],['Revenue growth if failed',4]],ex:[['Treasury efficiency if passed',9],['Treasury efficiency if failed',2]]},
+ tvl:{n:'TVL growth',u:'%',p:11,f:6,pd:'+5 pp',oc:[['TVL growth if passed',11],['TVL growth if failed',6]],ex:[['Active users if passed',7],['Active users if failed',3]]},
+ usr:{n:'Active users',u:'%',p:7,f:3,pd:'+4 pp',oc:[['Active users if passed',7],['Active users if failed',3]],ex:[['Retention if passed',5],['Retention if failed',5]]}
+};
+let cur='rev';
+function draw(){
+  const m=M[cur]; $('#vp').textContent='+'+m.p+m.u; $('#vf').textContent='+'+m.f+m.u; $('#vd').textContent=m.pd;
+  $('#bp').style.width=Math.min(100,m.p*4)+'%'; $('#bf').style.width=Math.min(100,m.f*4)+'%';
+  $('#oc').innerHTML=[...m.oc,...m.ex].map(([n,v],i)=>`<div><div style="display:flex;justify-content:space-between;font-size:13.5px;margin-bottom:6px"><span>${n}</span><b>+${v}%</b></div>${bar(Math.min(100,v*4),i%2?'':'')}</div>`).join('');
+  const base=m.p, pass=walk(7,24,2,6,0,40).map((v,i)=>+(v*(1-i/23)+m.p*(i/23)).toFixed(1)), fail=walk(11,24,2,4,0,40).map((v,i)=>+(v*(1-i/23)+m.f*(i/23)).toFixed(1));
+  lineChart($('#chart'),[{data:pass,color:'var(--green)',area:true},{data:fail,color:'var(--muted)'}],{min:0,max:Math.max(24,m.p+6),unit:'%',labels:['Oct 1','','','','','Oct 8','','','','','Oct 15','','','','','Oct 18'].concat(Array(8).fill('')).slice(0,24),label:'Forecast pass vs fail'});
+}
+$('#metricTabs').innerHTML=Object.entries(M).map(([k,v])=>`<button class="check ${k===cur?'on':''}" data-k="${k}">${v.n}</button>`).join('');
+$('#metricTabs').onclick=e=>{const b=e.target.closest('.check');if(!b)return;cur=b.dataset.k;$$('.check').forEach(x=>x.classList.toggle('on',x===b));draw()};
+draw();
+</script>
+</body>
+</html>
