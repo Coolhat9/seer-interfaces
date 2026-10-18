@@ -3,6 +3,67 @@
   const LOGO = `<svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M19.5 2.5 5 17.2c-.6.6-.2 1.6.7 1.6h7.1l-2.6 9.1c-.2.8.8 1.3 1.4.7L26.9 13c.6-.6.2-1.6-.7-1.6h-7.4l2.4-7.6c.3-.9-.7-1.6-1.4-.9Z" fill="currentColor"/><path d="M9 17.5l14.2-6" stroke="var(--bg)" stroke-width="2.6" stroke-linecap="round"/></svg>`;
   window.SEER_LOGO = LOGO;
 
+  // ---------- wallet connect ----------
+  const WALLETS = [['MetaMask', 'M', '#f6851b', 'Browser extension'], ['Coinbase Wallet', 'C', '#0052ff', 'Mobile & extension'], ['WalletConnect', 'W', '#3b99fc', 'Scan with any wallet'], ['Rabby', 'R', '#7084ff', 'Browser extension']];
+  const Wallet = {
+    addr: null, name: null, real: false, ov: null,
+    short(a) { return a.slice(0, 6) + '…' + a.slice(-4); },
+    paint() {
+      const b = document.getElementById('connectBtn'); if (!b) return;
+      b.innerHTML = this.addr ? `<span class="dot" style="color:var(--green)"></span>${this.short(this.addr)}` : 'Connect<span class="hide-sm">&nbsp;wallet</span>';
+    },
+    close() { if (this.ov) this.ov.classList.remove('open'); },
+    open() {
+      if (!this.ov) {
+        this.ov = document.createElement('div'); this.ov.className = 'overlay';
+        this.ov.onclick = e => { if (e.target === this.ov) this.close(); };
+        document.body.append(this.ov);
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') this.close(); });
+      }
+      this.render(); this.ov.classList.add('open');
+    },
+    head(t) { return `<div class="whead"><h3>${t}</h3><button id="wX" aria-label="Close">✕</button></div>`; },
+    render() {
+      const o = this.ov;
+      if (this.addr) {
+        o.innerHTML = `<div class="wmodal" role="dialog" aria-modal="true">${this.head('Wallet connected')}
+          <div class="wacct"><span class="badge green"><i class="dot"></i> ${this.name}</span><div class="addr">${this.addr}</div>
+          <div style="display:flex;justify-content:space-between;font-size:13.5px"><span class="t2">Balance</span><b>${this.real ? '—' : '1,250.00 USDC'}</b></div></div>
+          <button class="btn btn-ghost" style="width:100%" id="wCopy">Copy address</button>
+          <button class="btn btn-sell" style="width:100%;margin-top:8px" id="wOut">Disconnect</button>
+          ${this.real ? '' : '<p class="wnote">Demo wallet · no real funds or signatures</p>'}</div>`;
+        $('#wCopy', o).onclick = () => { try { navigator.clipboard.writeText(this.addr); toast('Address copied'); } catch (e) { toast('Copy not available'); } };
+        $('#wOut', o).onclick = () => { this.addr = null; this.name = null; this.real = false; this.paint(); this.close(); toast('Wallet disconnected'); };
+      } else {
+        o.innerHTML = `<div class="wmodal" role="dialog" aria-modal="true">${this.head('Connect a wallet')}
+          <p class="sub">Choose a wallet to start trading on Seer.</p>
+          ${WALLETS.map(w => `<button class="wopt" data-w="${w[0]}"><span class="wico" style="background:${w[2]}">${w[1]}</span><b>${w[0]}</b><small>${w[3]}</small></button>`).join('')}
+          <p class="wnote">By connecting you accept the Seer terms. Demo only: no real transactions are sent.</p></div>`;
+        $$('.wopt', o).forEach(b => b.onclick = () => this.connect(b.dataset.w));
+      }
+      $('#wX', o).onclick = () => this.close();
+    },
+    async connect(name) {
+      const o = this.ov;
+      o.innerHTML = `<div class="wmodal">${this.head('Connecting…')}<div class="wstate"><div class="spin"></div><b>Approve in ${name}</b><p class="t2" style="font-size:13px;margin-top:4px">Confirm the connection request in your wallet.</p></div></div>`;
+      $('#wX', o).onclick = () => this.close();
+      let addr = null, real = false;
+      try {
+        if (window.ethereum && name !== 'WalletConnect') {
+          const a = await window.ethereum.request({ method: 'eth_requestAccounts' });
+          if (a && a[0]) { addr = a[0]; real = true; }
+        } else { await new Promise(r => setTimeout(r, 1100)); }
+      } catch (e) {
+        o.innerHTML = `<div class="wmodal">${this.head('Connection cancelled')}<p class="sub">The request was rejected. You can try again.</p><button class="btn btn-primary" style="width:100%" id="wRetry">Try again</button></div>`;
+        $('#wX', o).onclick = () => this.close(); $('#wRetry', o).onclick = () => this.render();
+        return;
+      }
+      this.addr = addr || '0x7a3F9c21B4e8d05A6c1E92f3b7D40a8C5e19d3B2';
+      this.name = name; this.real = real; this.paint(); this.close(); toast(`${name} connected`);
+    }
+  };
+  window.Wallet = Wallet;
+
   const PAGES = [
     ['index.html', 'Home'], ['app.html', 'Seer App'], ['deep.html', 'Deep'],
     ['futarchy.html', 'Futarchy'], ['opportunity.html', 'Opportunity'], ['risk.html', 'Risk Pricing']
@@ -35,7 +96,7 @@
     document.body.append(foot);
 
     const tb = document.getElementById('themeBtn');
-    const paint = () => tb.textContent = isLight() ? '☾ Dark' : '☀ Light';
+    const paint = () => tb.innerHTML = isLight() ? '☾<span class="hide-sm">&nbsp;Dark</span>' : '☀<span class="hide-sm">&nbsp;Light</span>';
     paint();
     tb.onclick = () => {
       const next = isLight() ? 'dark' : 'light';
@@ -44,7 +105,8 @@
       paint(); window.dispatchEvent(new Event('themechange'));
     };
     document.getElementById('menuBtn').onclick = () => document.getElementById('links').classList.toggle('open');
-    document.getElementById('connectBtn').onclick = () => toast('Wallet connect is a design placeholder');
+    document.getElementById('connectBtn').onclick = () => Wallet.open();
+    Wallet.paint();
   };
 
   const t = document.createElement('div'); t.className = 'toast'; t.setAttribute('role', 'status');
@@ -72,17 +134,19 @@
       ov.onclick = e => { if (e.target === ov) ov.classList.remove('open'); };
       $('#tX').onclick = () => ov.classList.remove('open');
       $$('.quick button', ov).forEach(b => b.onclick = () => { ov._amt += +b.dataset.a; ov._upd(); });
-      $('#tOk').onclick = () => { if (!ov._amt) return toast('Add an amount first'); ov.classList.remove('open'); toast(`Order preview: $${ov._amt.toFixed(2)} on ${ov._side}`); };
+      $('#tOk').onclick = () => { if (!Wallet.addr) { ov.classList.remove('open'); return Wallet.open(); } if (!ov._amt) return toast('Add an amount first'); ov.classList.remove('open'); toast(`Order preview: $${ov._amt.toFixed(2)} on ${ov._side}`); };
       document.addEventListener('keydown', e => { if (e.key === 'Escape') ov.classList.remove('open'); });
     }
     ov._amt = 0; ov._side = side;
     const yes = side === 'Yes' ? price : 100 - price, no = 100 - yes;
     $('#tTitle', ov).textContent = title; $('#tVol', ov).textContent = vol || '—';
     $('#oYes b', ov).textContent = yes + '¢'; $('#oNo b', ov).textContent = no + '¢';
-    $('#oYes', ov).className = 'opt' + (side === 'Yes' ? ' p' : ''); $('#oNo', ov).className = 'opt' + (side === 'No' ? ' p' : '');
+    $('#oYes', ov).className = 'opt yes-o' + (side === 'Yes' ? ' on' : ''); $('#oNo', ov).className = 'opt no-o' + (side === 'No' ? ' on' : '');
     ov._upd = () => {
       const px = (side === 'Yes' ? yes : no) / 100;
       $('#tAmt', ov).textContent = '$' + ov._amt.toFixed(2);
+      $('#tOk', ov).className = 'btn btn-lg ' + (side === 'Yes' ? 'btn-buy' : 'btn-sell');
+      $('#tOk', ov).textContent = Wallet.addr ? 'Confirm ' + side : 'Connect wallet to trade';
       $('#tEst', ov).innerHTML = ov._amt ? `Est. shares <b>${(ov._amt / px).toFixed(1)}</b> · Max payout <b>$${(ov._amt / px).toFixed(2)}</b>` : `Buying <b>${side}</b> at ${(px * 100).toFixed(0)}¢. Pick an amount.`;
     };
     ov._upd(); ov.classList.add('open');

@@ -89,10 +89,10 @@ function card(m){
   const open = (side,p)=>`openTicket(${JSON.stringify(m.q).replace(/"/g,'&quot;')},'${side}',${p},'${fmt(m.v)} Vol.')`;
   let body='';
   if(m.k==='rows') body = m.rows.map(([n,p])=>`<div class="row"><span class="n">${n}</span><span class="p">${p}%</span><span class="yn"><button class="yes" onclick="${open('Yes',p)}">Yes</button><button class="no" onclick="${open('No',100-p)}">No</button></span></div>`).join('');
-  if(m.k==='yn') body = `<div class="big-row"><button class="big-btn p" onclick="${open('Yes',m.p||50)}">Yes${m.p?` · ${m.p}¢`:''}</button></div><div class="big-row"><button class="big-btn" onclick="${open('No',m.p||50)}">No${m.p?` · ${100-m.p}¢`:''}</button></div>`;
-  if(m.k==='updown') body = `<button class="big-btn p" style="height:48px" onclick="${open('Yes',52)}">Up</button><button class="big-btn" style="height:48px" onclick="${open('No',52)}">Down</button>`;
-  if(m.k==='three') body = m.rows.map(([n,p])=>`<div class="row"><span class="n">${n}</span><span class="p">${p}%</span></div>`).join('') + `<div class="big-row"><button class="big-btn p" onclick="${open('Yes',35)}">Argentina</button><button class="big-btn" onclick="${open('Yes',30)}">Draw</button><button class="big-btn" onclick="${open('Yes',35)}">England</button></div>`;
-  if(m.k==='duel') body = m.rows.map(([n,p])=>`<div class="row"><span class="n">${n}</span><span class="p">${p}%</span></div>`).join('') + `<div class="big-row"><button class="big-btn p" onclick="${open('Yes',50)}">${m.rows[0][0]}</button><button class="big-btn" onclick="${open('Yes',50)}">${m.rows[1][0]}</button></div>`;
+  if(m.k==='yn') body = `<div class="big-row"><button class="big-btn buy" onclick="${open('Yes',m.p||50)}">Yes${m.p?` · ${m.p}¢`:''}</button></div><div class="big-row"><button class="big-btn sell" onclick="${open('No',m.p||50)}">No${m.p?` · ${100-m.p}¢`:''}</button></div>`;
+  if(m.k==='updown') body = `<button class="big-btn buy" style="height:48px" onclick="${open('Yes',52)}">Up</button><button class="big-btn sell" style="height:48px" onclick="${open('No',52)}">Down</button>`;
+  if(m.k==='three') body = m.rows.map(([n,p])=>`<div class="row"><span class="n">${n}</span><span class="p">${p}%</span></div>`).join('') + `<div class="big-row"><button class="big-btn buy" onclick="${open('Yes',35)}">Argentina</button><button class="big-btn" onclick="${open('Yes',30)}">Draw</button><button class="big-btn sell" onclick="${open('Yes',35)}">England</button></div>`;
+  if(m.k==='duel') body = m.rows.map(([n,p])=>`<div class="row"><span class="n">${n}</span><span class="p">${p}%</span></div>`).join('') + `<div class="big-row"><button class="big-btn buy" onclick="${open('Yes',50)}">${m.rows[0][0]}</button><button class="big-btn sell" onclick="${open('Yes',50)}">${m.rows[1][0]}</button></div>`;
   return `<article class="mkt"><div class="mkt-head">${th(m)}<div class="mkt-q">${m.q}</div></div>${body}${foot}</article>`;
 }
 function render(){

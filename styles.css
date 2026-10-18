@@ -17,6 +17,10 @@
   --red: #ff5d6c;
   --amber: #f5b041;
   --glow: rgba(116,53,248,.28);
+  --buy: #18a058;
+  --buy-hover: #1db866;
+  --sell: #e0384b;
+  --sell-hover: #f04558;
   color-scheme: dark;
 }
 :root[data-theme="light"] {
@@ -146,11 +150,13 @@ section { padding: 36px 0; }
 .row .p { color: var(--text); font-weight: 500; }
 .yn { display: flex; gap: 4px; }
 .yes, .no { height: 28px; padding: 0 10px; border-radius: 7px; font-size: 12px; font-weight: 500; }
-.yes { background: var(--primary); color: #fff; } .yes:hover { background: var(--primary-hover); }
-.no { background: var(--btn2); color: var(--btn2-text); }
+.yes { background: var(--buy); color: #fff; } .yes:hover { background: var(--buy-hover); }
+.no { background: var(--sell); color: #fff; } .no:hover { background: var(--sell-hover); }
 .big-row { display: flex; gap: 8px; }
 .big-btn { flex: 1; height: 46px; border-radius: 11px; background: var(--btn2); color: var(--btn2-text); font-weight: 500; font-size: 14px; transition: .15s; }
 .big-btn.p { background: var(--primary); color: #fff; }
+.big-btn.buy { background: var(--buy); color: #fff; }
+.big-btn.sell { background: var(--sell); color: #fff; }
 .big-btn:hover { filter: brightness(1.12); }
 .mkt-foot { display: flex; align-items: center; gap: 8px; font-size: 11.5px; color: var(--muted); padding: 2px 2px 0; }
 .mkt-foot .sp { flex: 1; }
@@ -182,11 +188,16 @@ section { padding: 36px 0; }
 .quick button { height: 40px; border-radius: 10px; background: var(--nested); color: var(--text2); font-size: 13.5px; font-weight: 500; }
 .quick button:hover { color: var(--text); }
 .ticket-actions { display: flex; gap: 8px; }
-.ticket-actions .btn-primary { flex: 1; height: 48px; }
+.ticket-actions .btn { flex: 1; height: 48px; }
 .ticket-actions .x { width: 48px; height: 48px; border-radius: 12px; background: var(--btn2); color: var(--btn2-text); font-size: 18px; }
 .sidebyside { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .opt { padding: 10px 12px; border-radius: 10px; background: var(--btn2); color: var(--btn2-text); }
-.opt.p { background: var(--primary); color: #fff; }
+.opt.yes-o { background: color-mix(in srgb, var(--buy) 16%, transparent); color: var(--green); }
+.opt.no-o { background: color-mix(in srgb, var(--sell) 16%, transparent); color: var(--red); }
+.opt.yes-o.on { background: var(--buy); color: #fff; }
+.opt.no-o.on { background: var(--sell); color: #fff; }
+.btn-buy { background: var(--buy); color: #fff; } .btn-buy:hover { background: var(--buy-hover); }
+.btn-sell { background: var(--sell); color: #fff; } .btn-sell:hover { background: var(--sell-hover); }
 .opt small { display: block; font-size: 11px; opacity: .75; }
 .opt b { font-size: 18px; font-weight: 500; }
 
@@ -267,6 +278,24 @@ section { padding: 36px 0; }
   .ticket { grid-template-columns: 1fr; }
   .layer-apps { grid-template-columns: repeat(2, 1fr); }
   .hide-sm { display: none; }
-  .btn-connect { display: none; }
+  .btn-connect { padding: 0 12px; font-size: 13px; }
+  .nav-right { gap: 6px; }
   .stat .v { font-size: 24px; }
 }
+
+/* wallet modal */
+.wmodal { width: 100%; max-width: 400px; background: var(--bg); border: 1px solid var(--line); border-radius: 22px; padding: 20px; }
+.wmodal .whead { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+.wmodal .whead button { width: 32px; height: 32px; border-radius: 10px; background: var(--nested); }
+.wmodal p.sub { color: var(--text2); font-size: 13.5px; margin-bottom: 14px; }
+.wopt { display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px 14px; border-radius: 14px; background: var(--nested); text-align: left; margin-bottom: 8px; transition: .15s; }
+.wopt:hover { background: var(--btn2); }
+.wopt b { flex: 1; font-weight: 500; }
+.wopt small { color: var(--muted); font-size: 12px; }
+.wico { width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; color: #fff; font-weight: 700; flex: none; }
+.wstate { text-align: center; padding: 24px 0 8px; }
+.wstate .spin { width: 34px; height: 34px; border-radius: 50%; border: 3px solid var(--btn2); border-top-color: var(--primary); margin: 0 auto 14px; animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.wacct { background: var(--nested); border-radius: 14px; padding: 14px; margin-bottom: 12px; }
+.wacct .addr { font-family: 'JetBrains Mono', monospace; font-size: 13px; word-break: break-all; color: var(--text2); margin: 6px 0; }
+.wnote { font-size: 11.5px; color: var(--muted); text-align: center; margin-top: 10px; }
