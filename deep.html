@@ -24,6 +24,11 @@
     </div>
   </section>
 
+  <section style="padding-top:0;padding-bottom:8px">
+    <div class="wrap"><div class="card"><div class="eyebrow" style="margin-bottom:10px">How to read this signal</div><div id="sig"></div></div></div>
+  </section>
+
+
   <section id="field">
     <div class="wrap grid g2" style="grid-template-columns:1.1fr 1fr">
       <div class="card">
@@ -70,6 +75,7 @@ await seer.deep.trade({ field: field.id, prices: p, budget: 250 });</pre></div>
 </main>
 <script>
 mountShell('deep.html');
+signalStrip($('#sig'), {who:['Teams and agent builders', 'A team poses a question with many possible outcomes and funds liquidity for it.'],prices:['A probability for each outcome', 'Prices across the field add up to 100%. The leader is the crowd’s best guess.'],use:['Compare the whole field', 'Look at the gaps and the spread, not just the top pick. Agents are labelled.']});
 const names=['Open-source dev tooling','Climate research fund','Community research fellowship','ZK education hub','Builder residency cohort','Public goods matching pool','Local language models','Privacy wallet UX','Cross-chain indexer','Open data commons','Security audit pool','Mentorship network'];
 const raw=[38,26,18,15,13,11,9,8,7,6,5,5,4,4,3,3,3,2,2,2,2,1,1,1]; const tot=raw.reduce((a,b)=>a+b); const P=raw.map(v=>+(v/tot*100).toFixed(1));
 const nm=i=>i<names.length?names[i]:`Proposal #${String(i+1).padStart(2,'0')}`;

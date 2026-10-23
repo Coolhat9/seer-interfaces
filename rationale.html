@@ -12,14 +12,26 @@
   <section class="hero glow">
     <div class="wrap prose">
       <div class="eyebrow">Design rationale</div>
-      <h1 style="font-size:clamp(34px,5vw,56px);margin-top:12px">One system, <span class="accent">six lenses.</span></h1>
-      <p>Each interface starts from the same Electric Foundation kit, then adapts layout and density to its job: exploring, forecasting a field, informing a decision, triaging submissions, or comparing risk.</p>
+      <h1 style="font-size:clamp(34px,5vw,56px);margin-top:12px">One protocol, <span class="accent">six lenses.</span></h1>
+      <p>Seer is an Information Finance protocol. This design starts from that idea, then uses the Electric Foundation kit as its foundation and rethinks the experience where the kit stops.</p>
+
+      <h2>The idea behind the structure</h2>
+      <p>Seer is a <b style="color:var(--text)">two-sided marketplace</b>. <b style="color:var(--text)">Information seekers</b> need answers to make decisions. <b style="color:var(--text)">Traders</b> (people and AI agents) put capital behind forecasts for a potential profit. The market price sits between them as a shared, transparent signal.</p>
+      <p>So every screen is built around three questions a visitor should be able to answer within seconds:</p>
+      <div class="list" style="margin:12px 0">
+        <div class="item"><div class="ic">1</div><div class="tx"><b>Who is asking?</b><small>Every market card names the asker and their type (DAO, research team, nonprofit, public). The home page shows both sides of the marketplace, with a path for each.</small></div></div>
+        <div class="item"><div class="ic">2</div><div class="tx"><b>What is the market pricing?</b><small>A plain-language “Prices” line sits on each card, so a number like 69% always says what it is a probability of.</small></div></div>
+        <div class="item"><div class="ic">3</div><div class="tx"><b>How do I use the signal?</b><small>Each interface carries a “How to read this signal” strip, and each market detail view ends with a usage note: evidence, not a verdict.</small></div></div>
+      </div>
+
+      <h2>Seer App as the Etherscan of Seer</h2>
+      <p>The app is a general explorer, not a trading screen. People can search by question, asker or market ID, filter by market type and category, and open any market for its price history, recent trades (humans and agents labelled), resolution details and asker. From there they can trade, or jump to the interface built for that market type.</p>
 
       <h2>What stays from EF</h2>
       <p>Logo and wordmark, the electric violet (#7435F8), the dark and light palettes, nested-surface cards, Yes/No pill buttons, the Up/Down and three-way buttons, the Amount + Confirm ticket, and the market-card footer (volume · time · category).</p>
       <div class="swatches" style="margin:16px 0" id="sw"></div>
 
-      <h2>Deliberate departures</h2>
+      <h2>What changed from the kit, and why</h2>
       <div class="list" style="margin:12px 0">
         <div class="item"><div class="ic">1</div><div class="tx"><b>Semantic status colours</b><small>Added green / amber / red for gains, risk levels and agent P&amp;L. The kit has none; risk and conditional forecasts need a fast read.</small></div></div>
         <div class="item"><div class="ic">2</div><div class="tx"><b>Yes/No prices sum to 100¢</b><small>The kit mock shows 69¢ / 37¢. The ticket uses complementary pricing (69¢ / 31¢) so numbers stay honest.</small></div></div>
@@ -27,10 +39,14 @@
         <div class="item"><div class="ic">4</div><div class="tx"><b>Soft violet glow in heroes</b><small>One ambient gradient per page ties the six sites together and signals the protocol layer.</small></div></div>
         <div class="item"><div class="ic">5</div><div class="tx"><b>Table views for Opportunity &amp; Risk</b><small>Comparison tasks need aligned columns, not cards.</small></div></div>
         <div class="item"><div class="ic">6</div><div class="tx"><b>Persistent “informs, doesn’t decide” notes</b><small>Futarchy, Opportunity and Risk all repeat that markets are one input, never the verdict.</small></div></div>
+        <div class="item"><div class="ic">7</div><div class="tx"><b>An asker line on every market card</b><small>The kit card shows the question and prices only. Adding who asked turns an anonymous number into context, which is what a two-sided marketplace needs.</small></div></div>
+        <div class="item"><div class="ic">8</div><div class="tx"><b>“Prices” and “How to use it” in plain words</b><small>New text blocks, in the same nested surface as the kit, explain the signal without extra chrome.</small></div></div>
+        <div class="item"><div class="ic">9</div><div class="tx"><b>A market detail view with explorer-style data</b><small>Market ID, volume, liquidity, trades and resolution make Seer App feel like an explorer for the whole protocol.</small></div></div>
+        <div class="item"><div class="ic">10</div><div class="tx"><b>Home page built around the marketplace</b><small>The hero and a seekers-and-traders section replace a generic “forecasting layer” story.</small></div></div>
       </div>
 
       <h2>Interface intent</h2>
-      <p><b style="color:var(--text)">Home</b> shows Seer as the protocol beneath its apps. <b style="color:var(--text)">Seer App</b> is the Etherscan-style explorer. <b style="color:var(--text)">Deep</b> maps many-outcome questions and agent activity. <b style="color:var(--text)">Futarchy</b> compares pass vs fail forecasts. <b style="color:var(--text)">Opportunity</b> shows selection odds while reviewers keep the call. <b style="color:var(--text)">Risk Pricing</b> compares protocols side by side.</p>
+      <p><b style="color:var(--text)">Home</b> shows Seer as the protocol beneath its apps. <b style="color:var(--text)">Seer App</b> is the Etherscan-style explorer for every market. <b style="color:var(--text)">Deep</b> maps many-outcome questions and agent activity. <b style="color:var(--text)">Futarchy</b> compares pass vs fail forecasts. <b style="color:var(--text)">Opportunity</b> shows selection odds while reviewers keep the call. <b style="color:var(--text)">Risk Pricing</b> compares protocols side by side.</p>
 
       <h2>Accessibility</h2>
       <p>Both themes meet contrast for body text, interactive elements are keyboard-reachable, motion respects prefers-reduced-motion, and every layout collapses cleanly to phone width.</p>

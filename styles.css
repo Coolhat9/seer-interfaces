@@ -299,3 +299,39 @@ section { padding: 36px 0; }
 .wacct { background: var(--nested); border-radius: 14px; padding: 14px; margin-bottom: 12px; }
 .wacct .addr { font-family: 'JetBrains Mono', monospace; font-size: 13px; word-break: break-all; color: var(--text2); margin: 6px 0; }
 .wnote { font-size: 11.5px; color: var(--muted); text-align: center; margin-top: 10px; }
+
+/* ---- v2: two-sided marketplace, signal strip, explorer detail ---- */
+.sides { display: grid; grid-template-columns: 1fr auto 1fr; gap: 16px; align-items: stretch; }
+.side { display: flex; flex-direction: column; gap: 10px; }
+.side .role { display: flex; align-items: center; gap: 10px; }
+.side .role .ic { width: 36px; height: 36px; border-radius: 10px; background: var(--btn2); color: var(--btn2-text); display: grid; place-items: center; font-weight: 600; font-family: 'JetBrains Mono', monospace; }
+.side ul { list-style: none; padding: 0; margin: 4px 0 0; display: flex; flex-direction: column; gap: 8px; font-size: 14px; color: var(--text2); }
+.side li::before { content: "→ "; color: var(--btn2-text); }
+.sides .mid { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; text-align: center; min-width: 120px; }
+.sides .mid .pill { padding: 8px 14px; border-radius: 999px; background: var(--primary); color: #fff; font-size: 13px; font-weight: 600; }
+.sides .mid small { color: var(--muted); font-size: 11.5px; max-width: 130px; }
+.signal { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.signal > div { background: var(--nested); border-radius: 14px; padding: 14px 16px; }
+.signal .n { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: .12em; color: var(--btn2-text); text-transform: uppercase; }
+.signal b { display: block; margin: 6px 0 4px; font-size: 15px; }
+.signal p { margin: 0; font-size: 13.5px; color: var(--text2); line-height: 1.45; }
+.asker { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text2); flex-wrap: wrap; }
+.asker .av { width: 20px; height: 20px; border-radius: 50%; background: var(--btn2); color: var(--btn2-text); display: grid; place-items: center; font-size: 10px; font-weight: 600; flex: none; }
+.asker b { color: var(--text); font-weight: 500; }
+.prices-line { font-size: 12px; color: var(--muted); line-height: 1.4; padding: 8px 10px; border-radius: 10px; background: var(--nested); }
+.prices-line span { color: var(--btn2-text); font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; margin-right: 6px; }
+.detail-link { background: none; border: 0; color: var(--btn2-text); font-size: 11.5px; cursor: pointer; padding: 0; font-family: inherit; }
+.detail-link:hover { text-decoration: underline; }
+.drawer { width: 100%; max-width: 860px; max-height: calc(100vh - 32px); overflow-y: auto; background: var(--bg); border: 1px solid var(--line); border-radius: 24px; padding: 20px; display: flex; flex-direction: column; gap: 14px; }
+.drawer .dh { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; }
+.drawer .dh h2 { font-size: clamp(20px, 3vw, 26px); margin: 6px 0 0; line-height: 1.2; }
+.drawer .x { width: 40px; height: 40px; flex: none; border-radius: 12px; background: var(--btn2); color: var(--btn2-text); font-size: 16px; border: 0; cursor: pointer; }
+.drawer .kv { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.drawer .kv > div { background: var(--nested); border-radius: 12px; padding: 10px 12px; }
+.drawer .kv small { display: block; color: var(--muted); font-size: 11px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: .08em; }
+.drawer .kv b { font-size: 15px; font-weight: 600; }
+.mono { font-family: 'JetBrains Mono', monospace; }
+.tbl-wrap { overflow-x: auto; }
+.howto { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; padding: 12px 14px; border-radius: 14px; background: color-mix(in srgb, var(--primary) 12%, var(--card)); border: 1px solid color-mix(in srgb, var(--primary) 30%, transparent); font-size: 14px; }
+@media (max-width: 860px) { .sides { grid-template-columns: 1fr; } .sides .mid { flex-direction: row; min-width: 0; } .signal { grid-template-columns: 1fr; } .drawer .kv { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 860px) { .grid.g2 { grid-template-columns: 1fr !important; } .grid > * { min-width: 0; } }

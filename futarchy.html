@@ -18,6 +18,11 @@
     </div>
   </section>
 
+  <section style="padding-top:0;padding-bottom:8px">
+    <div class="wrap"><div class="card"><div class="eyebrow" style="margin-bottom:10px">How to read this signal</div><div id="sig"></div></div></div>
+  </section>
+
+
   <section style="padding-top:8px">
     <div class="wrap">
       <div class="card" style="padding:24px">
@@ -68,6 +73,7 @@
 </main>
 <script>
 mountShell('futarchy.html');
+signalStrip($('#sig'), {who:['A DAO weighing a proposal', 'The DAO asks what a key metric will be if the proposal passes, and if it fails.'],prices:['A metric in two worlds', 'Two markets forecast the same metric: one if it passes, one if it fails.'],use:['The gap is the signal', 'If “pass” forecasts a better metric, the market favours it. The DAO still decides.']});
 const M={
  rev:{n:'Revenue growth',u:'%',p:18,f:4,pd:'+14 pp',oc:[['Revenue growth if passed',18],['Revenue growth if failed',4]],ex:[['Treasury efficiency if passed',9],['Treasury efficiency if failed',2]]},
  tvl:{n:'TVL growth',u:'%',p:11,f:6,pd:'+5 pp',oc:[['TVL growth if passed',11],['TVL growth if failed',6]],ex:[['Active users if passed',7],['Active users if failed',3]]},

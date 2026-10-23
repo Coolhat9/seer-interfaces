@@ -23,6 +23,11 @@
     </div>
   </section>
 
+  <section style="padding-top:0;padding-bottom:8px">
+    <div class="wrap"><div class="card"><div class="eyebrow" style="margin-bottom:10px">How to read this signal</div><div id="sig"></div></div></div>
+  </section>
+
+
   <section style="padding-top:8px">
     <div class="wrap split">
       <div class="card">
@@ -61,6 +66,7 @@
 </main>
 <script>
 mountShell('risk.html');
+signalStrip($('#sig'), {who:['Protocol users and treasuries', 'Anyone with exposure asks how likely a loss event is on each protocol.'],prices:['Market-implied risk', 'Each protocol’s price is the crowd’s chance of an incident over the horizon.'],use:['Compare, then size exposure', 'Read protocols side by side to weigh trade-offs. It is one input, not an audit.']});
 const P=[
  {n:'Aave',t:'Lending',r:2.6,c:'#3ddc84',h:{7:1.4,30:2.6,90:5.2}},{n:'Compound',t:'Lending',r:4.6,c:'#f5b041',h:{7:2.1,30:4.6,90:8.8}},
  {n:'Morpho',t:'Lending',r:5.1,c:'#f5b041',h:{7:2.4,30:5.1,90:9.7}},{n:'Maker / Sky',t:'Collateral',r:2.9,c:'#3ddc84',h:{7:1.5,30:2.9,90:5.9}},

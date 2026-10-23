@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Seer — See the signal</title>
-<meta name="description" content="Seer is the forecasting protocol beneath a family of connected market interfaces.">
+<meta name="description" content="Seer is an Information Finance protocol: a two-sided marketplace where people who need answers meet traders who put capital behind forecasts.">
 <link rel="stylesheet" href="styles.css">
 <script src="shared.js"></script>
 </head>
@@ -13,14 +13,14 @@
   <section class="hero glow">
     <div class="wrap grid" style="grid-template-columns:1.2fr 1fr;align-items:center;gap:40px" id="heroGrid">
       <div>
-        <div class="eyebrow">Seer · One forecasting layer</div>
+        <div class="eyebrow">Seer · Information Finance protocol</div>
         <h1 style="margin-top:18px">See the signal.<br><span class="accent">Shape what<br>comes next.</span></h1>
-        <p class="lead">A new lens on collective intelligence. Explore forecasts, compare possible futures, and bring better signals to the decisions that matter.</p>
+        <p class="lead">Seer turns questions into prices. People who need answers ask; traders put capital behind what they believe; everyone can read the signal.</p>
         <div class="hero-actions">
           <a class="btn btn-primary btn-lg" href="app.html">Explore markets →</a>
           <a class="btn btn-ghost btn-lg" href="#interfaces">View six interfaces</a>
         </div>
-        <p class="muted" style="margin-top:18px;font-size:13px">A protocol for forecasting. Six interfaces for how people use it.</p>
+        <p class="muted" style="margin-top:18px;font-size:13px">Information Finance: one protocol, six interfaces for how people use it.</p>
       </div>
       <div class="orb" aria-hidden="true">
         <div class="ring r3"></div><div class="ring r2"></div><div class="ring r1"></div><div class="core"></div>
@@ -28,6 +28,32 @@
         <span class="lab" style="top:14px;right:16px">LIVE CONSENSUS</span>
         <span class="lab" style="bottom:14px;left:16px">06 INTERFACES</span>
         <span class="lab" style="bottom:14px;right:16px">ONE PROTOCOL</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="marketplace">
+    <div class="wrap">
+      <div class="section-head"><div><div class="eyebrow">Information Finance · A two-sided marketplace</div><h2 style="margin-top:8px">Answers on one side. Capital on the other.</h2></div>
+        <span class="t2" style="font-size:14px;max-width:360px">The price in the middle is the product: a live, tradable answer.</span></div>
+      <div class="sides">
+        <div class="card side">
+          <div class="role"><div class="ic">?</div><div><div class="eyebrow">Information seekers</div><h3>Ask a question</h3></div></div>
+          <p class="t2" style="font-size:14px">DAOs, teams, researchers and individuals who need an answer to make a decision.</p>
+          <ul><li>Create a market for the question that matters</li><li>Fund liquidity to attract forecasters</li><li>Read the price as evidence and keep the decision</li></ul>
+          <a class="btn btn-secondary" href="app.html">Browse who is asking →</a>
+        </div>
+        <div class="mid" aria-hidden="true"><span class="pill">Market price</span><small>A shared, transparent signal both sides can see</small></div>
+        <div class="card side">
+          <div class="role"><div class="ic">$</div><div><div class="eyebrow">Traders &amp; agents</div><h3>Back a forecast</h3></div></div>
+          <p class="t2" style="font-size:14px">People and AI agents who put capital behind what they believe, for a potential profit.</p>
+          <ul><li>Find mispriced questions across every interface</li><li>Buy the outcome you think is underpriced</li><li>Earn when the market resolves in your favour</li></ul>
+          <a class="btn btn-primary" href="app.html">Find a market to trade →</a>
+        </div>
+      </div>
+      <div class="card" style="margin-top:16px">
+        <div class="eyebrow" style="margin-bottom:10px">Every market answers three things</div>
+        <div id="homeSignal"></div>
       </div>
     </div>
   </section>
@@ -49,9 +75,9 @@
           <div class="layer"><div class="muted" style="font-size:12px;margin-bottom:10px" class="mono">INTERFACES</div>
             <div class="layer-apps"><a href="app.html">Seer App</a><a href="deep.html">Deep</a><a href="futarchy.html">Futarchy</a><a href="opportunity.html">Opportunity</a><a href="risk.html">Risk Pricing</a></div></div>
           <div class="center t2" style="text-align:center;font-size:18px">↕</div>
-          <div class="layer base"><h3>Seer protocol</h3><p class="t2" style="font-size:14px;margin-top:4px">Market creation · pricing · resolution · liquidity. One shared source of truth for every question.</p></div>
+          <div class="layer base"><h3>Seer protocol</h3><p class="t2" style="font-size:14px;margin-top:4px">Market creation · pricing · resolution · liquidity. The information layer where questions become prices.</p></div>
           <div class="center t2" style="text-align:center;font-size:18px">↕</div>
-          <div class="layer"><h3>Traders, agents &amp; decision-makers</h3><p class="t2" style="font-size:14px;margin-top:4px">People and AI agents trade. Teams and DAOs read the signal — and keep the decision.</p></div>
+          <div class="layer"><h3>Two sides: seekers &amp; traders</h3><p class="t2" style="font-size:14px;margin-top:4px">Seekers ask and keep the decision. Traders and AI agents back forecasts with capital.</p></div>
         </div>
       </div>
       <div class="card">
@@ -78,8 +104,13 @@
 </main>
 <script>
 mountShell('index.html');
+signalStrip($('#homeSignal'), {
+  who:['The asker','Every market shows the person, team or DAO behind the question, so you know what it is for.'],
+  prices:['A live probability','The price is the crowd’s collective belief about the outcome, backed by real capital.'],
+  use:['Evidence, not a verdict','Read the signal, compare it to your own view, then decide or trade on it.']
+});
 const tiles = [
-  ['A','Seer App','The general explorer. Find and trade across every market type — Seer’s Etherscan.','Binary · Multi · Scalar','app.html'],
+  ['A','Seer App','Seer’s Etherscan: explore any market, see who asked and what it prices, then trade.','Binary · Multi · Scalar','app.html'],
   ['D','Deep','Questions with many possible outcomes, including markets built for AI agents to trade.','Many outcomes · Agents','deep.html'],
   ['F','Futarchy','Conditional markets forecast a metric if a proposal passes versus if it doesn’t.','Conditional · DAO','futarchy.html'],
   ['O','Opportunity Markets','Forecast which submissions get selected. Reviewers keep the final say.','Selection · Grants','opportunity.html'],

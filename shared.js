@@ -211,6 +211,14 @@
     el.innerHTML = `<svg class="chart" viewBox="0 0 ${W} ${H}" style="color:var(--text)" role="img" aria-label="${opts.label || 'Chart'}">${g}${lines}</svg>`;
   };
 
+  // ---------- who's asking · what it prices · how to use it ----------
+  window.signalStrip = function (el, o) {
+    el.innerHTML = `<div class="signal" role="group" aria-label="How to read this signal">
+      <div><div class="n">01 · Who is asking</div><b>${o.who[0]}</b><p>${o.who[1]}</p></div>
+      <div><div class="n">02 · What it prices</div><b>${o.prices[0]}</b><p>${o.prices[1]}</p></div>
+      <div><div class="n">03 · How to use it</div><b>${o.use[0]}</b><p>${o.use[1]}</p></div></div>`;
+  };
+
   // deterministic pseudo-random walk for demo charts
   window.walk = function (seed, n, start, step, lo = 1, hi = 99) {
     let s = seed, v = start; const out = [];

@@ -11,9 +11,9 @@
 <main>
   <section class="glow" style="padding-bottom:8px">
     <div class="wrap">
-      <div class="eyebrow" style="margin-top:20px">Seer App · Market explorer</div>
+      <div class="eyebrow" style="margin-top:20px">Seer App · The explorer for every Seer market</div>
       <h1 style="font-size:clamp(34px,5vw,56px);margin:10px 0 8px">Find your next signal.</h1>
-      <p class="lead" style="font-size:16px">One explorer for every Seer market. Search, filter and trade across binary, multi-outcome, live and sports markets.</p>
+      <p class="lead" style="font-size:16px">Discover, understand and trade across every market type and interface. For each one, see who is asking, what the price means and how to use it.</p>
       <div class="grid g4 keep2" style="margin-top:24px">
         <div class="card stat"><div class="k">Open markets</div><div class="v">1,284</div><div class="d">Across all interfaces</div></div>
         <div class="card stat"><div class="k">24h volume</div><div class="v">$2.84M</div><div class="d up">▲ 8.2% vs yesterday</div></div>
@@ -23,18 +23,27 @@
     </div>
   </section>
 
+  <section style="padding-top:20px;padding-bottom:0">
+    <div class="wrap">
+      <div class="card"><div class="eyebrow" style="margin-bottom:10px">How to read any market</div><div id="appSignal"></div>
+        <div class="howto" style="margin-top:12px"><span><b>Need an answer?</b> Ask a question and fund liquidity.</span><span style="flex:1"></span><span><b>Have a view?</b> Trade the outcome you think is mispriced.</span></div></div>
+    </div>
+  </section>
+
   <section style="padding-top:20px">
     <div class="wrap">
       <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:14px">
         <label class="search"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-          <input id="q" type="search" placeholder="Search markets…" aria-label="Search markets"></label>
+          <input id="q" type="search" placeholder="Search question, asker or market ID…" aria-label="Search by question, asker or market ID"></label>
         <select id="sort" class="btn btn-ghost" aria-label="Sort" style="appearance:none;padding-right:18px;outline:0">
           <option value="vol">Sort: Volume</option><option value="new">Sort: Newest</option><option value="end">Sort: Ending soon</option></select>
-        <button class="btn btn-primary" onclick="toast('Create market is a design placeholder')">Create Market +</button>
+        <select id="type" class="btn btn-ghost" aria-label="Market type" style="appearance:none;padding-right:18px;outline:0">
+          <option value="">All market types</option><option>Binary</option><option>Multi-outcome</option><option>Live</option><option>Match</option></select>
+        <button class="btn btn-primary" onclick="toast('Ask a question: design placeholder')">Ask a question +</button>
       </div>
       <div class="tabs" id="tabs" role="tablist"></div>
       <div class="markets" id="grid" style="margin-top:18px"></div>
-      <p id="empty" class="muted" style="display:none;text-align:center;padding:60px 0">No markets match your search.</p>
+      <p id="empty" class="muted" style="display:none;text-align:center;padding:60px 0">No markets match. Try an asker name or a market ID.</p>
     </div>
   </section>
 
@@ -81,6 +90,29 @@ const M = [
  {q:'ETH above $6,000 by year end?',c:'Crypto',v:22,k:'yn',i:'Ξ',col:'#627eea',foot:'Yearly',p:28},
  {q:'DOGE department savings exceed $200B?',c:'DOGE',v:4.7,k:'yn',i:'Ð',col:'#c2a633',foot:'Annual',p:12}
 ];
+/* asker, asker type, what it prices, how to use it (same order as M) */
+const A = [
+ ['Atlas Policy Desk','Research team','The timing of a US announcement ending the blockade.','Compare dates: the sharpest jump shows when the crowd expects it.'],
+ ['Open question','Public','The chance of each result at full time.','Treat it as a pre-match odds check. Deep liquidity means prices move on real news.'],
+ ['Seer Live','Protocol feed','Bitcoin’s direction over the next 5 minutes.','Short horizon and noisy: a sentiment read, not a forecast.'],
+ ['World Cup Desk','Media desk','Who the crowd expects to finish as top scorer.','Read the top three together; the gap between them shows conviction.'],
+ ['Treasury Council','DAO treasury','The chance of each Fed outcome in July.','Use it to time stablecoin and rate exposure.'],
+ ['Open question','Public','Who the crowd expects to win the 2026 award.','Watch the trend, not one day’s price.'],
+ ['Open question','Public','The chance each side wins the match.','Quick odds check before the match starts.'],
+ ['Shipping Risk Team','Risk team','Whether Hormuz traffic normalises by 31 August.','Feed it into logistics and energy planning.'],
+ ['Open question','Public','Who wins the season title.','Compare against your own model to spot mispricing.'],
+ ['Open question','Public','The weekly tweet-count range.','Use ranges together to see the full spread.'],
+ ['Civic Forecast Lab','Nonprofit','Who the crowd expects as the 2028 nominee.','A long-range signal. Expect it to move slowly.'],
+ ['Open question','Public','The chance each side wins the series.','Quick odds check before the match starts.'],
+ ['Policy Lab DAO','DAO','The chance the bill is signed in 2026.','A legislative-risk input for compliance planning.'],
+ ['Energy Desk','Trading firm','The chance crude closes above $90 on 1 August.','Use as one input when hedging energy exposure.'],
+ ['AI Forecast Group','Research group','The chance GPT-6 ships before 2027.','Track the price against announcements to see what the crowd believes.'],
+ ['Gulf Mutual','Insurance pool','The chance a named storm hits by 30 September.','Informs reserves; does not replace actuarial models.'],
+ ['Treasury Council','DAO treasury','The chance ETH is above $6,000 at year end.','Use as a sentiment gauge for treasury sizing.'],
+ ['Civic Data Project','Nonprofit','Whether DOGE savings exceed $200B.','Compare the price with published figures as they come in.']
+];
+const T = {rows:'Multi-outcome',yn:'Binary',updown:'Live',three:'Match',duel:'Match'};
+M.forEach((m,i)=>{ m.a=A[i]; m.t=T[m.k]; let h=0; for(const ch of m.q) h=(h*31+ch.charCodeAt(0))>>>0; m.id='0x'+h.toString(16).padStart(8,'0')+(i+1).toString(16).padStart(2,'0')+'…'+((h*7)>>>0).toString(16).slice(-4); });
 let cat='All';
 const fmt = v => v>=1000?`$${(v/1000).toFixed(0)}B`:v>=1?`$${v%1?v.toFixed(1).replace(/\.0$/,''):v}M`:`$${Math.round(v*1000)}K`;
 const th = m => m.i ? `<div class="thumb" style="background:${m.col}">${m.i}</div>` : '';
@@ -93,18 +125,56 @@ function card(m){
   if(m.k==='updown') body = `<button class="big-btn buy" style="height:48px" onclick="${open('Yes',52)}">Up</button><button class="big-btn sell" style="height:48px" onclick="${open('No',52)}">Down</button>`;
   if(m.k==='three') body = m.rows.map(([n,p])=>`<div class="row"><span class="n">${n}</span><span class="p">${p}%</span></div>`).join('') + `<div class="big-row"><button class="big-btn buy" onclick="${open('Yes',35)}">Argentina</button><button class="big-btn" onclick="${open('Yes',30)}">Draw</button><button class="big-btn sell" onclick="${open('Yes',35)}">England</button></div>`;
   if(m.k==='duel') body = m.rows.map(([n,p])=>`<div class="row"><span class="n">${n}</span><span class="p">${p}%</span></div>`).join('') + `<div class="big-row"><button class="big-btn buy" onclick="${open('Yes',50)}">${m.rows[0][0]}</button><button class="big-btn sell" onclick="${open('Yes',50)}">${m.rows[1][0]}</button></div>`;
-  return `<article class="mkt"><div class="mkt-head">${th(m)}<div class="mkt-q">${m.q}</div></div>${body}${foot}</article>`;
+  const asker = `<div class="asker"><span class="av">${m.a[0][0]}</span><span>Asked by <b>${m.a[0]}</b></span><span class="badge">${m.a[1]}</span></div>`;
+  const prices = `<div class="prices-line"><span>Prices</span>${m.a[2]}</div>`;
+  const idx = M.indexOf(m);
+  return `<article class="mkt"><div class="mkt-head">${th(m)}<div class="mkt-q">${m.q}</div></div>${asker}${body}${prices}${foot.replace('<span class="sp"></span>','<span class="sp"></span><button class="detail-link" onclick="openDetail('+idx+')">Details →</button>')}</article>`;
 }
 function render(){
   const s = $('#q').value.trim().toLowerCase(), sort = $('#sort').value;
-  let list = M.filter(m => (cat==='All'||m.c===cat) && (!s || m.q.toLowerCase().includes(s) || m.rows?.some(r=>r[0].toLowerCase().includes(s))));
+  const ty = $('#type').value;
+  let list = M.filter(m => (cat==='All'||m.c===cat) && (!ty||m.t===ty) && (!s || m.q.toLowerCase().includes(s) || m.a[0].toLowerCase().includes(s) || m.id.toLowerCase().includes(s) || m.rows?.some(r=>r[0].toLowerCase().includes(s))));
   if(sort==='vol') list.sort((a,b)=>b.v-a.v); if(sort==='new') list = list.slice().reverse();
   $('#grid').innerHTML = list.map(card).join('');
   $('#empty').style.display = list.length?'none':'block';
 }
 $('#tabs').innerHTML = cats.map((c,i)=>`<button role="tab" class="chip ${i?'':'on'}" data-c="${c}">${c}</button>`).join('');
 $('#tabs').onclick = e => { const b=e.target.closest('.chip'); if(!b) return; $$('.chip').forEach(x=>x.classList.remove('on')); b.classList.add('on'); cat=b.dataset.c; render(); };
-$('#q').oninput = render; $('#sort').onchange = render; render();
+$('#q').oninput = render; $('#sort').onchange = render; $('#type').onchange = render; render();
+signalStrip($('#appSignal'), {
+  who:['The asker','Each card names the person, team or DAO behind the question and what kind of asker they are.'],
+  prices:['A live probability','The “Prices” line says in plain words what the number means.'],
+  use:['Open Details','See the history, trades, resolution source and a note on how to use the signal.']
+});
+function openDetail(i){
+  const m = M[i]; let ov = $('#detail');
+  if(!ov){ ov = document.createElement('div'); ov.id='detail'; ov.className='overlay'; document.body.append(ov);
+    ov.onclick = e => { if(e.target===ov) ov.classList.remove('open'); };
+    document.addEventListener('keydown', e => { if(e.key==='Escape') ov.classList.remove('open'); }); }
+  const lead = m.rows ? m.rows[0] : null, p = m.p || (lead ? lead[1] : 50);
+  const trades = [['0x7a3F…d3B2','Human','Yes',120],['agent-04','Agent','No',65],['0x91c0…44aE','Human','Yes',300],['agent-17','Agent','Yes',40],['0x2bD8…7f01','Human','No',210]]
+    .map((t,k)=>`<tr><td class="mono">${t[0]}</td><td><span class="badge ${t[1]==='Agent'?'amber':''}">${t[1]}</span></td><td>${t[2]}</td><td>$${t[3]}</td><td class="muted">${(k+1)*7} min ago</td></tr>`).join('');
+  ov.innerHTML = `<div class="drawer" role="dialog" aria-modal="true" aria-label="Market details">
+    <div class="dh"><div><div class="eyebrow">Market · <span class="mono">${m.id}</span></div><h2>${m.q}</h2>
+      <div class="asker" style="margin-top:10px"><span class="av">${m.a[0][0]}</span><span>Asked by <b>${m.a[0]}</b></span><span class="badge">${m.a[1]}</span><span class="badge">${m.t}</span></div></div>
+      <button class="x" id="dX" aria-label="Close">✕</button></div>
+    <div class="signal"><div><div class="n">01 · Who is asking</div><b>${m.a[0]}</b><p>${m.a[1]} using this market to inform a decision. They fund liquidity and keep the decision.</p></div>
+      <div><div class="n">02 · What it prices</div><b>${p}% leading</b><p>${m.a[2]}</p></div>
+      <div><div class="n">03 · How to use it</div><b>Evidence, not a verdict</b><p>${m.a[3]}</p></div></div>
+    <div class="kv"><div><small>Volume</small><b>${fmt(m.v)}</b></div><div><small>Liquidity</small><b>${fmt(m.v*0.18)}</b></div><div><small>Traders</small><b>${Math.max(12,Math.round(m.v*140))}</b></div><div><small>Resolves</small><b>${m.foot||'Dec 31'}</b></div></div>
+    <div class="card"><div class="section-head" style="margin-bottom:6px"><h3>Price history</h3><span class="badge">30 days</span></div><div id="dChart"></div></div>
+    <div class="card"><div class="section-head" style="margin-bottom:6px"><h3>Recent trades</h3><span class="badge">Humans and agents labelled</span></div>
+      <div class="tbl-wrap"><table class="table"><thead><tr><th>Trader</th><th>Type</th><th>Side</th><th>Amount</th><th>When</th></tr></thead><tbody>${trades}</tbody></table></div></div>
+    <div class="card"><h3 style="margin-bottom:6px">Resolution</h3><p class="t2" style="font-size:14px;margin:0">Resolved on-chain by the market’s reporter using the source set when the question was created. Every trade and the final outcome stay visible in this view.</p></div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn btn-buy btn-lg" id="dYes">Trade Yes</button><button class="btn btn-sell btn-lg" id="dNo">Trade No</button></div>
+    <p class="muted" style="font-size:12px;margin:0">Illustrative data. Markets inform decisions; they do not make them.</p></div>`;
+  $('#dX',ov).onclick = () => ov.classList.remove('open');
+  const q = JSON.stringify(m.q);
+  $('#dYes',ov).onclick = () => { ov.classList.remove('open'); openTicket(m.q,'Yes',p,fmt(m.v)+' Vol.'); };
+  $('#dNo',ov).onclick = () => { ov.classList.remove('open'); openTicket(m.q,'No',100-p,fmt(m.v)+' Vol.'); };
+  ov.classList.add('open');
+  lineChart($('#dChart',ov), [{data:walk(i*13+7,30,p,10,2,98),color:'var(--primary-hover)',area:true}], {unit:'%',labels:['','','','','','','','','','','','','','','','','','','','','','','','','','','','','','Now'],h:200,label:'Price history'});
+}
 const a = [32,41,38,52,47,60,55,68,74,70,82,88,79,96];
 $('#act').innerHTML = a.map((v,i)=>`<div style="height:${v}%" data-t="Day ${i+1}: $${(v*0.03).toFixed(2)}M"></div>`).join('');
 $('#actx').innerHTML = a.map((_,i)=>`<span>${i%3===0?i+1:''}</span>`).join('');
